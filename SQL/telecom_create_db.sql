@@ -1,25 +1,9 @@
 psql create database 
+-- DATASET is available at https://mlbootcamp.ru/ru/round/15/sandbox/
+-- Please consider this database as trial, so there are no restraints at the tables
+-- and no set references among tables.
 
-
-
-COPY CSV_Export FROM '/Users/elenasuslova/Downloads/train/subs_csi_train.csv' DELIMITER ';' CSV HEADER ;
-
-CREATE TABLE CSV_Export (
-	SK_ID INT,
-	CSI INT,
-	contact_date varchar(8)
-);
-
-
-
-
-
-/Users/elenasuslova/Downloads/train/
-
-subs_features_train.csv
-
-
-drop table subs_features;
+-- Creating the table of Customers' features and filling it up from CSV
 
 CREATE TABLE subs_features (
 SNAP_DATE	text, 
@@ -60,7 +44,6 @@ COM_CAT_33		text,
 COM_CAT_34		int
 );
 
-
 COPY subs_features FROM '/Users/elenasuslova/Downloads/train/subs_features_train.csv' DELIMITER ';' CSV HEADER ;
 
 alter table subs_features 
@@ -86,15 +69,8 @@ alter column com_cat_31 type numeric using ('0.' || substring (com_cat_31 from 2
 alter column com_cat_32 type numeric using ('0.' || substring (com_cat_32 from 2) ) :: real ,
 alter column com_cat_33 type numeric using ('0.' || substring (com_cat_33 from 2) ) :: real ;
 
-select 
-*
-from subs_features 
-limit 10;
 
-------------
-
-
-drop table subs_csi;
+-- Creating the table of Survey data and filling it up from CSV
 
 CREATE TABLE subs_csi (
 SK_ID		text,
@@ -108,14 +84,7 @@ alter table subs_csi
 alter column CONTACT_DATE type date using (substring(CONTACT_DATE, 4)|| '.' || substring(CONTACT_DATE, 0, 3)|| '.2002') :: date ;
 
 
-select 
-distinct contact_date
-from subs_csi 
-order by 1;
-
-------------
-
-drop table subs_bs_voice_session;
+-- Creating the table of Voice consumption and filling it up from CSV
 
 CREATE TABLE subs_bs_voice_session (
 SK_ID		text, 
@@ -128,10 +97,8 @@ COPY subs_bs_voice_session FROM '/Users/elenasuslova/Downloads/train/subs_bs_voi
 
 alter table subs_bs_voice_session alter column VOICE_DUR_MIN type numeric using ('0.' || substring (VOICE_DUR_MIN from 2) ) :: real ;
 
---------------
 
-
-drop table subs_bs_data_session;
+-- Creating the table of Data sessions anf filling it up from CSV
 
 CREATE TABLE subs_bs_data_session (
 SK_ID		text, 
@@ -144,9 +111,8 @@ COPY subs_bs_data_session FROM '/Users/elenasuslova/Downloads/train/subs_bs_data
 
 alter table subs_bs_data_session alter column DATA_VOL_MB type numeric using ('0.' || substring (DATA_VOL_MB from 2) ) :: real ;
 
---------------
 
-drop table subs_bs_consumption;
+-- Creating the table of Consumption and filling it up from CSV
 
 CREATE TABLE subs_bs_consumption (
 SK_ID		text, 
@@ -163,8 +129,3 @@ alter table subs_bs_consumption
 alter column SUM_MINUTES	type numeric using ('0.' || substring (SUM_MINUTES from 2) ) :: real ,
 alter column SUM_DATA_MB	type numeric using ('0.' || substring (SUM_DATA_MB from 2) ) :: real ,
 alter column SUM_DATA_MIN 	type numeric using ('0.' || substring (SUM_DATA_MIN from 2) ) :: real ;
-
-select 
-*
-from subs_bs_consumption
-limit 10;
